@@ -2186,6 +2186,16 @@ Your friend, %s, thought that you would be interested in %s from %s.]]></value>
       <group>products</group>
     </definition>
     <definition>
+      <key>js_review_text_name</key>
+      <value><![CDATA[* You must enter your name.]]></value>
+      <group>products</group>
+    </definition>
+    <definition>
+      <key>js_review_text_email</key>
+      <value><![CDATA[* You must enter your email address.]]></value>
+      <group>products</group>
+    </definition>
+    <definition>
       <key>js_review_rating</key>
       <value><![CDATA[* You must rate the product for your review.]]></value>
       <group>products</group>

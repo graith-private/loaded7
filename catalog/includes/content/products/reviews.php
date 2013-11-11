@@ -128,9 +128,11 @@
       if ($lC_Customer->isLoggedOn()) {
         $data['customer_id'] = $lC_Customer->getID();
         $data['customer_name'] = $lC_Customer->getName();
+        $data['customer_email_address'] = $lC_Customer->getEmailAddress();
       } else {
         $data['customer_id'] = '0';
         $data['customer_name'] = $_POST['customer_name'];
+        $data['customer_email_address'] = $_POST['customer_email_address'];
       }
 
       if (strlen(trim($_POST['review'])) < REVIEW_TEXT_MIN_LENGTH) {
@@ -139,13 +141,21 @@
         $data['review'] = $_POST['review'];
       }
 
+      if (!empty($data['customer_name'])) {
+        $lC_MessageStack->add('reviews_name', $lC_Language->get('js_review_text_name'));
+      }
+
+      if (!empty($data['customer_email_address'])) {
+        $lC_MessageStack->add('reviews_email', $lC_Language->get('js_review_text_email'));
+      }
+
       if (($_POST['rating'] < 1) || ($_POST['rating'] > 5)) {
         $lC_MessageStack->add('reviews', $lC_Language->get('js_review_rating'));
       } else {
         $data['rating'] = $_POST['rating'];
       }
 
-      if ($lC_MessageStack->size('reviews') < 1) {
+      if ($lC_MessageStack->size('reviews') < 1 && $lC_MessageStack->size('reviews_name') < 1 && $lC_MessageStack->size('reviews_email') < 1) {
         if ($lC_Reviews->is_moderated === true) {
           $data['status'] = '0';
 
