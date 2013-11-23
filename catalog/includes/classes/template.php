@@ -153,6 +153,8 @@ class lC_Template {
   * @return object
   */
   public function &setup($module) {
+    global $lC_Vqmod;
+
     $group = basename($_SERVER['SCRIPT_FILENAME']);
     if (($pos = strrpos($group, '.')) !== false) {
       $group = substr($group, 0, $pos);
@@ -168,7 +170,8 @@ class lC_Template {
       }
     }
 
-    include('includes/content/' . $group . '/' . $module . '.php');
+    //include('includes/content/' . $group . '/' . $module . '.php');
+    include_once($lC_Vqmod->modCheck('includes/content/' . $group . '/' . $module . '.php'));
     $_page_module_name = 'lC_' . ucfirst($group) . '_' . ucfirst($module);
     $object = new $_page_module_name();
     
