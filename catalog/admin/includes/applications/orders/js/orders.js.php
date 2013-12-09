@@ -237,28 +237,33 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
         $("#editPrice").val(data.price);
         $("#editQuantity").val(data.quantity);
         $("#editProduct").empty();
-        $.each(data.productsArray, function(val, text) {
-          
+        $.each(data.productsArray, function(val, text) {          
           var selected = (data.products_id == text['products_id']) ? 'selected="selected"' : '';
-          if(data.products_id == text['products_id']) {
+          if (data.products_id == text['products_id']) {
             $("#editProduct").closest("span + *").prevAll("span.select-value:first").text(text['products_name']);
           }
           $("#editProduct").append(
             $("<option " + selected + "></option>").val(text['products_id']).html(text['products_name'])
           );
         });
-        /*$("#editTaxclass").empty();
-        $.each(data.taxclassArray, function(val, text) {
-          var selected = (data.tax_class_id == val) ? 'selected="selected"' : '';
-          if(data.tax_class_id == val) {
-            $("#editTaxclass").closest("span + *").prevAll("span.select-value:first").text(text);
+        $("#editTaxclass").empty();
+        var cnt = 1;
+        $.each(data.taxclassArray.entries, function(val, text) {
+          var selected = (data.tax_class_id == text['tax_class_id']) ? 'selected="selected"' : '';
+          if (cnt == 1) {
+            $("#editTaxclass").append(
+              $("<option></option>").val('0').html('<?php echo $lC_Language->get('text_none'); ?>')
+            );
+            cnt++;
+          }
+          if (data.tax_class_id == text['tax_class_id']) {
+            $("#editTaxclass").closest("span + *").prevAll("span.select-value:first").text(text['tax_class_title']);
           }
           $("#editTaxclass").append(
-            $("<option " + selected + "></option>").val(val).html(text)
+            $("<option " + selected + "></option>").val(val).html(text['tax_class_title'])
           );
-        });*/
-        $.modal.all.centerModal();
-        
+        });
+        $.modal.all.centerModal();        
       }
     );
   }
@@ -287,8 +292,7 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
         $("#editPrice").val(data.price);
         $("#editQuantity").val(1);
         $("#editProduct").empty();
-        $.each(data.productsArray, function(val, text) {
-          
+        $.each(data.productsArray, function(val, text) {          
           var selected = (data.products_id == text['products_id']) ? 'selected="selected"' : '';
           if(data.products_id == text['products_id']) {
             $("#editProduct").closest("span + *").prevAll("span.select-value:first").text(text['products_name']);
@@ -307,8 +311,7 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
             $("<option " + selected + "></option>").val(val).html(text)
           );
         });*/
-        $.modal.all.centerModal();
-        
+        $.modal.all.centerModal();        
       }
     );
   }
@@ -358,30 +361,34 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
 
     $.modal({
         content: '<div id="editProductContainer">'+
-           '    <div id="section_editProduct">'+
-           '      <form name="editProductForm" id="editProductForm" autocomplete="off" action="" method="post">'+  
-           '      <p class="button-height inline-label">'+
-           '        <label for="product" class="label"><?php echo $lC_Language->get('text_products'); ?></label><br>'+
-           '        <?php echo lc_draw_pull_down_menu('product', null, null, 'class="input with-small-padding" id="editProduct" onchange="updateEditProduct();"'); ?>'+
-           '      </p>'+
-           '      <p class="button-height inline-label">'+
-           '        <label for="taxClass" class="label"><?php echo $lC_Language->get('text_tax_class'); ?></label></p><p class="button-height">'+
-           '        <?php echo lc_draw_pull_down_menu('taxClass', null, null, 'class="input with-small-padding" id="editTaxclass"'); ?>'+
-           '      </p>'+
-           '      <p class="button-height inline-label">'+
-           '        <label for="price" class="label"><?php echo $lC_Language->get('text_price'); ?></label></p><p class="button-height">'+
-           '        <?php echo lc_draw_input_field('price', null, 'class="input" id="editPrice"'); ?>'+
-           '      </p>'+
-           '      <p class="button-height inline-label">'+
-           '        <label for="quantity" class="label"><?php echo $lC_Language->get('text_quantity'); ?></label></p><p class="button-height">'+
-           '        <?php echo lc_draw_input_field('quantity', null, 'class="input" id="editQuantity"'); ?>'+
-           '      </p>'+
-           '      </form>'+
-           '    </div>'+ 
-           '    <span id="oId" style="display:none;"></span>'+
-           '    <span id="pId" style="display:none;"></span>'+
-           '    <span id="opId" style="display:none;"></span>'+
-           '</div>',
+                 '  <div id="section_editProduct">'+
+                 '    <form name="editProductForm" id="editProductForm" autocomplete="off" action="" method="post">'+  
+                 '    <p class="button-height inline-label">'+
+                 '      <label for="product" class="label"><?php echo $lC_Language->get('text_products'); ?>'+
+                 '      <?php echo lc_draw_pull_down_menu('product', null, null, 'class="input with-small-padding mid-margin-top" id="editProduct" onchange="updateEditProduct();"'); ?>'+
+                 '      </label>'+
+                 '    </p>'+
+                 '    <p class="button-height inline-label">'+
+                 '      <label for="taxClass" class="label"><?php echo $lC_Language->get('text_tax_class'); ?>'+
+                 '      <?php echo lc_draw_pull_down_menu('taxClass', null, null, 'class="input with-small-padding mid-margin-top" id="editTaxclass"'); ?>'+
+                 '      </label>'+
+                 '    </p>'+
+                 '    <p class="button-height inline-label">'+
+                 '      <label for="price" class="label"><?php echo $lC_Language->get('text_price'); ?>'+
+                 '      <?php echo lc_draw_input_field('price', null, 'class="input mid-margin-top" id="editPrice"'); ?>'+
+                 '      </label>'+
+                 '    </p>'+
+                 '    <p class="button-height inline-label">'+
+                 '      <label for="quantity" class="label"><?php echo $lC_Language->get('text_quantity'); ?>'+
+                 '      <?php echo lc_draw_input_field('quantity', null, 'class="input mid-margin-top" id="editQuantity"'); ?>'+
+                 '      </label>'+
+                 '    </p>'+
+                 '    </form>'+
+                 '  </div>'+ 
+                 '  <span id="oId" style="display:none;"></span>'+
+                 '  <span id="pId" style="display:none;"></span>'+
+                 '  <span id="opId" style="display:none;"></span>'+
+                 '</div>',
         title: '<?php echo $lC_Language->get('text_product_details'); ?>',
         width: 600,
         scrolling: true,

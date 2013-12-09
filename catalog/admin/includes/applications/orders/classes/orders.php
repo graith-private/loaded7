@@ -749,16 +749,21 @@ class lC_Orders_Admin {
     $result['orderProduct'] = ''; 
     foreach ( $lC_Order->getProduct($oid, $pid) as $product ) {
       $result = $product;
-
+      
       require_once($lC_Vqmod->modCheck('includes/applications/products/classes/products.php'));
       require_once($lC_Vqmod->modCheck('includes/applications/tax_classes/classes/tax_classes.php'));
 
-      $tmpProduct = lC_Products_Admin::get($product['productID']);
-      $tmpTaxDetails = lC_Tax_classes_Admin:: get($tmpProduct['products_tax_class_id']);
-      $result['tax_class'] = $tmpTaxDetails['tax_class_title'];
-      $result['tax_class_id'] = $tmpProduct['products_tax_class_id'];
-      $result['productsArray'] = lC_Products_Admin::getproductsArray();;
-
+      $tmpProduct = lC_Products_Admin::get($product['products_id']);
+      $tmpTaxDetails = lC_Tax_classes_Admin::get($tmpProduct['products_tax_class_id']);
+      if ($tmpProduct['products_tax_class_id'] != 0) {
+        $result['tax_class'] = $tmpTaxDetails['tax_class_title'];
+        $result['tax_class_id'] = $tmpProduct['products_tax_class_id'];
+      } else {
+        $result['tax_class'] = 'None';
+        $result['tax_class_id'] = $tmpProduct['products_tax_class_id'];
+      }
+      $result['taxclassArray'] = lC_Tax_classes_Admin::getAll();
+      $result['productsArray'] = lC_Products_Admin::getproductsArray();
       $result['orderProduct'] .= '<div class="mid-padding-bottom">
                                     <label class="label small-padding-bottom" for="products_model">Model: </label>
                                     <span id="products_model" class="bolder">' . $product['model'] . '</span>
