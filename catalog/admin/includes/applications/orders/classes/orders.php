@@ -748,6 +748,17 @@ class lC_Orders_Admin {
     // build a single product string  
     $result['orderProduct'] = ''; 
     foreach ( $lC_Order->getProduct($oid, $pid) as $product ) {
+      $result = $product;
+
+      require_once($lC_Vqmod->modCheck('includes/applications/products/classes/products.php'));
+      require_once($lC_Vqmod->modCheck('includes/applications/tax_classes/classes/tax_classes.php'));
+
+      $tmpProduct = lC_Products_Admin::get($product['productID']);
+      $tmpTaxDetails = lC_Tax_classes_Admin:: get($tmpProduct['products_tax_class_id']);
+      $result['tax_class'] = $tmpTaxDetails['tax_class_title'];
+      $result['tax_class_id'] = $tmpProduct['products_tax_class_id'];
+      $result['productsArray'] = lC_Products_Admin::getproductsArray();;
+
       $result['orderProduct'] .= '<div class="mid-padding-bottom">
                                     <label class="label small-padding-bottom" for="products_model">Model: </label>
                                     <span id="products_model" class="bolder">' . $product['model'] . '</span>
@@ -778,7 +789,7 @@ class lC_Orders_Admin {
                                     <span id="products_total" class="bolder">' . $lC_Currencies->format($product['price'] * $product['quantity'], $lC_Order->getCurrency(), $lC_Order->getCurrencyValue()) . '</span>
                                   </div>';
     }
-    
+ 
     return $result;
   }
  /*
@@ -934,5 +945,84 @@ class lC_Orders_Admin {
     }
     return $ordersproducts;
   }
+
+  public static function getProductData($pId) {
+    global $lC_Language, $lC_Database, $lC_Vqmod;
+
+    require_once($lC_Vqmod->modCheck('includes/applications/products/classes/products.php'));
+    require_once($lC_Vqmod->modCheck('includes/applications/tax_classes/classes/tax_classes.php'));
+    $productData = lC_Products_Admin::getproductsArray($pId);
+    $result['products_id'] = $productData[0]['products_id'];
+    $result['price'] = $productData[0]['products_price'];
+    $result['tax_class_id'] = $productData[0]['products_tax_class_id'];
+    $result['productsArray'] = lC_Products_Admin::getproductsArray();
+
+    return $result;
+  }
+  public static function updateOrderProductData() {
+    global $lC_Language, $lC_Database, $lC_Vqmod;
+
+    $oID = $_GET['oid'];
+    $oPID = $_GET['opid'];
+    $products_id = $_GET['product'];
+    $products_price = $_GET['price'];
+    $products_quantity = $_GET['quantity'];
+    $products_tax_class_id = $_GET['taxClass'];
+
+    require_once($lC_Vqmod->modCheck('includes/applications/products/classes/products.php'));
+   /* //require_once($lC_Vqmod->modCheck('includes/classes/tax.php'));
+    //$lC_Tax = new lC_Tax_Admin();
+    //require_once($lC_Vqmod->modCheck('includes/applications/tax_classes/classes/tax_classes.php'));
+
+    //$t1 = lC_Tax_Admin::getTaxRate(1);
+    //$t = lC_Tax_classes_Admin:: get(1);
+    
+    print("t : <xmp>");
+    print_r($t);
+    print_r($t);
+    print("</xmp>");
+
+
+    die('9788888');
+*/
+    $productData = lC_Products_Admin::getproductsArray($pID);
+    $products_name = $productData[0]['products_name'];
+    $products_model = $productData[0]['products_model'];
+    $products_sku = $productData[0]['products_sku'];
+    
+
+
+    $Qupdate = $lC_Database->query('update :table_orders_products set products_model = :products_model, products_name = :products_name, products_price= :products_price, products_tax = :products_tax, products_quantity = :products_quantity where orders_products_id = :orders_products_id and orders_id = :orders_id');
+        $Qupdate->bindTable(':table_orders_products', TABLE_ORDERS_PRODUCTS);
+        $Qupdate->bindInt(':products_id', $products_id);
+        $Qupdate->bindValue(':products_model', $products_model);
+        $Qupdate->bindValue(':products_name', $products_name);
+        $Qupdate->bindValue(':products_price', $products_price);
+        $Qupdate->bindValue(':products_tax', 0);
+        $Qupdate->bindInt(':products_quantity', $products_quantity);        
+        $Qupdate->bindInt(':orders_products_id', $oPID);
+        $Qupdate->bindInt(':orders_id', $oID);
+        //$Qupdate->setLogging($_SESSION['module'], $id);
+        $Qupdate->execute();
+
+
+print("Qupdate : <xmp>");
+print_r($Qupdate);
+print("</xmp>");
+
+    die('967');
+
+    require_once($lC_Vqmod->modCheck('includes/applications/products/classes/products.php'));
+    
+    $productData = lC_Products_Admin::getproductsArray($pId);
+    $result['products_id'] = $productData[0]['products_id'];
+    $result['price'] = $productData[0]['products_price'];
+    $result['tax_class_id'] = $productData[0]['products_tax_class_id'];
+    $result['productsArray'] = lC_Products_Admin::getproductsArray();
+
+    return $result;
+  }
+
+
 }
 ?>

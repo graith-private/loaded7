@@ -37,8 +37,8 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
       </div>-->
       <div id="order_tabs" class="side-tabs tab-opened">
         <ul class="tabs">
-          <li class="active"><?php echo lc_link_object('#section_orders_summary', $lC_Language->get('section_orders_summary')); ?></li>
-          <li><?php echo lc_link_object('#section_orders_products', $lC_Language->get('section_orders_products')); ?></li>
+          <li ><?php echo lc_link_object('#section_orders_summary', $lC_Language->get('section_orders_summary')); ?></li>
+          <li class="active"><?php echo lc_link_object('#section_orders_products', $lC_Language->get('section_orders_products')); ?></li>
           <!--<li><?php echo lc_link_object('#section_orders_customer', $lC_Language->get('section_orders_customer')); ?></li>
           <li><?php echo lc_link_object('#section_orders_shipping', $lC_Language->get('section_orders_shipping')); ?></li>-->
           <li><?php echo lc_link_object('#section_orders_status', $lC_Language->get('section_orders_status')); ?></li>

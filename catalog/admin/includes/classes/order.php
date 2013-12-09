@@ -220,9 +220,9 @@
       $Qproducts->execute();
 
       while ($Qproducts->next()) {
-        $products_array[$key] = array('products_id' => $Qproducts->valueInt('orders_products_id'),
+        $products_array[$key] = array('orders_products_id' => $Qproducts->valueInt('orders_products_id'),
                                       'quantity' => $Qproducts->valueInt('products_quantity'),
-                                      'productID' => $Qproducts->value('products_id'),
+                                      'products_id' => $Qproducts->value('products_id'),
                                       'name' => $Qproducts->value('products_name'),
                                       'model' => $Qproducts->value('products_model'),
                                       'tax' => $Qproducts->value('products_tax'),
@@ -259,7 +259,7 @@
       
       while ($Qproduct->next()) {
         $product_array[$key] = array('quantity' => $Qproduct->valueInt('products_quantity'),
-                                     'productID' => $Qproducts->value('products_id'),
+                                     'products_id' => $Qproduct->value('products_id'),
                                      'name' => $Qproduct->value('products_name'),
                                      'model' => $Qproduct->value('products_model'),
                                      'tax' => $Qproduct->value('products_tax'),
