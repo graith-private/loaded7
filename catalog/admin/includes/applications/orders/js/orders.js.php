@@ -249,6 +249,7 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
         $("#editTaxclass").empty();
         var cnt = 1;
         $.each(data.taxclassArray.entries, function(val, text) {
+          
           var selected = (data.tax_class_id == text['tax_class_id']) ? 'selected="selected"' : '';
           if (cnt == 1) {
             $("#editTaxclass").append(
@@ -260,7 +261,7 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
             $("#editTaxclass").closest("span + *").prevAll("span.select-value:first").text(text['tax_class_title']);
           }
           $("#editTaxclass").append(
-            $("<option " + selected + "></option>").val(val).html(text['tax_class_title'])
+            $("<option " + selected + "></option>").val(text['tax_class_id']).html(text['tax_class_title'])
           );
         });
         $.modal.all.centerModal();        
@@ -301,16 +302,24 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
             $("<option " + selected + "></option>").val(text['products_id']).html(text['products_name'])
           );
         });
-        /*$("#editTaxclass").empty();
-        $.each(data.taxclassArray, function(val, text) {
-          var selected = (data.tax_class_id == val) ? 'selected="selected"' : '';
-          if(data.tax_class_id == val) {
-            $("#editTaxclass").closest("span + *").prevAll("span.select-value:first").text(text);
+         $("#editTaxclass").empty();
+        var cnt = 1;
+        $.each(data.taxclassArray.entries, function(val, text) {
+          
+          var selected = (data.tax_class_id == text['tax_class_id']) ? 'selected="selected"' : '';
+          if (cnt == 1) {
+            $("#editTaxclass").append(
+              $("<option></option>").val('0').html('<?php echo $lC_Language->get('text_none'); ?>')
+            );
+            cnt++;
+          }
+          if (data.tax_class_id == text['tax_class_id']) {
+            $("#editTaxclass").closest("span + *").prevAll("span.select-value:first").text(text['tax_class_title']);
           }
           $("#editTaxclass").append(
-            $("<option " + selected + "></option>").val(val).html(text)
+            $("<option " + selected + "></option>").val(text['tax_class_id']).html(text['tax_class_title'])
           );
-        });*/
+        });
         $.modal.all.centerModal();        
       }
     );
@@ -346,6 +355,8 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
           return false;
         } 
         updateOrderList();        
+        url = '<?php echo lc_href_link_admin(FILENAME_DEFAULT, 'orders=OID&action=save'); ?>';
+        $(location).attr('href',url.replace('OID', oid));
       }
     );
   }
@@ -401,7 +412,7 @@ $cSearch = (isset($_SESSION['cIDFilter']) && $_SESSION['cIDFilter'] != null) ? '
         buttons: {
           '<?php echo $lC_Language->get('button_save'); ?>': {
             classes:  'glossy',
-            click:    function(win) { saveEditproduct();win.closeModal(); }
+            click:    function(win) { saveEditproduct(); }
           },
           '<?php echo $lC_Language->get('button_close'); ?>': {
             classes:  'glossy',
