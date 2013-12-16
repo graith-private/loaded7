@@ -182,6 +182,9 @@ class lC_Updates_Admin_run_after extends lC_Updates_Admin {
     $lC_Database->simpleQuery("UPDATE `" . $pf . "configuration` SET `configuration_title` = 'Tag Cloud Maximum Listings' where `configuration_key` = 'TAG_CLOUD_MAX_LIST'");
     parent::log("Database Update: UPDATE `" . $pf . "configuration` SET `configuration_title` = 'Tag Cloud Maximum Listings' where `configuration_key` = 'TAG_CLOUD_MAX_LIST'");
     
+    $lC_Database->simpleQuery("UPDATE `" . $pf . "configuration` SET `configuration_title` = 'Postal Code' where `configuration_key` = 'ACCOUNT_POST_CODE'");
+    parent::log("Database Update: UPDATE `" . $pf . "configuration` SET `configuration_title` = 'Postal Code' where `configuration_key` = 'ACCOUNT_POST_CODE'");
+    
   } 
 }  
 ?>
