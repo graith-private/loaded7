@@ -1,15 +1,19 @@
 <?php
-/**
-  @package    catalog::admin::applications
-  @author     Loaded Commerce
-  @copyright  Copyright 2003-2014 Loaded Commerce, LLC
-  @copyright  Portions Copyright 2003 osCommerce
-  @copyright  Template built on Developr theme by DisplayInline http://themeforest.net/user/displayinline under Extended license 
-  @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
-  @version    $Id: rpc.php v1.0 2013-12-03 resultsonlyweb $
+/*
+  $Id: rpc.php v1.0 2013-12-01 resultsonlyweb $
+
+  LoadedCommerce, Innovative eCommerce Solutions
+  http://www.loadedcommerce.com
+
+  Copyright (c) 2013 Loaded Commerce, LLC
+
+  @author     LoadedCommerce Team
+  @copyright  (c) 2013 LoadedCommerce Team
+  @license    http://loadedcommerce.com/license.html
+ 
+  @function The lC_Products_import_export_Admin_rpc class is for AJAX remote program control
 */
 global $lC_Vqmod;
-
 require_once($lC_Vqmod->modCheck('includes/applications/products_import_export/classes/products_import_export.php'));
 
 class lC_Products_import_export_Admin_rpc {
