@@ -239,7 +239,7 @@ class lC_Payment_worldpay_hosted_payment extends lC_Payment {
       $process_button_string .= lc_draw_hidden_field('M_sid', session_id()) .
                                 lc_draw_hidden_field('M_cid', $lC_Customer->getID()) .
                                 lc_draw_hidden_field('M_lang', $lC_Language->getCode()) .
-                                lc_draw_hidden_field('M_hash', md5(session_id() . $lC_Customer->getID() . $order_id . $lC_Language->getCode() . number_format($lC_ShoppingCart->getTotal(), 2) . MODULE_PAYMENT_WORLDPAY_HOSTED_PAYMENT_MD5_PASSWORD));
+                                lc_draw_hidden_field('M_hash', md5(session_id() . $lC_Customer->getID() . $order_id . $lC_Language->getCode() . number_format($lC_ShoppingCart->getTotal(), 2) . ADDONS_PAYMENT_WORLDPAY_HOSTED_PAYMENT_MD5_PASSWORD));
 
       return $process_button_string;
   }
@@ -250,41 +250,8 @@ class lC_Payment_worldpay_hosted_payment extends lC_Payment {
   * @return string
   */ 
   public function process() {
-    global $lC_Language, $lC_Database, $lC_MessageStack;
-
-    if(isset($_POST['M_sid']) && !empty($_POST['M_sid'])){
-
-      if($_POST['transStatus'] == 'Y'){
-
-        $pass = false;
-        
-        if(isset($_POST['M_hash']) && !empty($_POST['M_hash']) && ($_POST['M_hash'] == md5($_POST['M_sid'] . $_POST['M_cid'] . $_POST['cartId'] . $_POST['M_lang'] . number_format($_POST['amount'], 2) . MODULE_PAYMENT_WORLDPAY_HOSTED_PAYMENT_MD5_PASSWORD))) {
-          
-          $pass = true;
-        }
-
-        if(isset($_POST['callbackPW']) && ($_POST['callbackPW'] != ADDONS_PAYMENT_WORLDPAY_HOSTED_PAYMENT_CALLBACK_PASSWORD)){
-          
-          $pass = false;
-        }
-
-        if(lc_not_null(ADDONS_PAYMENT_WORLDPAY_HOSTED_PAYMENT_CALLBACK_PASSWORD) && !isset($_POST['callbackPW'])){
-
-          $pass = false;
-        }
-
-
-        // Check if all is ok
-        if($pass == true){
-
-          $order_id = $_POST['cartId'];
-          lC_Order::process($order_id, $this->_order_status_complete);
-        }else{
-
-          $lC_MessageStack->add('checkout_payment', 'Invalid authorization!');
-        }
-      }
-    }
+    
+    return false;
   } 
  /**
   * Check the status of the pasyment module
@@ -298,18 +265,6 @@ class lC_Payment_worldpay_hosted_payment extends lC_Payment {
     }
 
     return $this->_check;
-  }
-
- /**
-  * Return the confirmation button logic
-  *
-  * @access public
-  * @return string
-  */ 
-  private function _iframe_params() {
-    global $lC_Language, $lC_ShoppingCart, $lC_Currencies, $lC_Customer; 
-    
-    
-  }  
+  } 
 }
 ?>
