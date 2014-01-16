@@ -179,6 +179,9 @@ class lC_Updates_Admin_run_after extends lC_Updates_Admin {
       parent::log("Database Update: UPDATE `" . $pf . "configuration` SET `configuration_value` = 'Postal Code (USA Zip)', `configuration_description` = 'Minimum requirement for the customers postal code (USA Zip).' where `configuration_key` = 'ACCOUNT_POST_CODE'");
     }
     
+    $lC_Database->simpleQuery("UPDATE `" . $pf . "configuration` SET `configuration_title` = 'Postal Code' where `configuration_key` = 'ACCOUNT_POST_CODE'");
+    parent::log("Database Update: UPDATE `" . $pf . "configuration` SET `configuration_title` = 'Postal Code' where `configuration_key` = 'ACCOUNT_POST_CODE'");
+    
   } 
 }  
 ?>
