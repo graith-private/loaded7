@@ -379,6 +379,15 @@ function modalMessage(text) {
 }
 
 function saveAddress() {
+
+  $.validator.addMethod("alphanumeric", function(value, element) {
+        return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
+  }, "Post Code must contain only letters, numbers, or dashes.");
+
+  $.validator.addMethod("validateTelephone", function(value, element) {
+        return this.optional(element) || /^[0-9\-\s]+$/i.test(value);
+  }, "Telephone must contain only numbers or dashes.");
+
   $("#formProcessing").fadeIn('fast');
   var abid = parseInt($("#abId").html());
   var fnameMin = '<?php echo ACCOUNT_FIRST_NAME; ?>';
@@ -400,10 +409,10 @@ function saveAddress() {
       ab_company: { minlength: companyMin },
       ab_street_address: { minlength: addressMin, required: true },
       ab_suburb: { minlength: suburbMin },
-      ab_postcode: { minlength: postcodeMin, required: true },
+      ab_postcode: { minlength: postcodeMin, required: true, alphanumeric: true },
       ab_city: { minlength: cityMin, required: true },
       ab_state: { required: true },
-      ab_telephone: { minlength: telephoneMin, required: true },
+      ab_telephone: { minlength: telephoneMin, required: true, validateTelephone: true },
       ab_fax: { minlength: faxMin },
     },
     invalidHandler: function() {
