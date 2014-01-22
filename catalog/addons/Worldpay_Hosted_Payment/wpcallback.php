@@ -20,26 +20,40 @@ if (defined('ADDONS_PAYMENT_WORLDPAY_HOSTED_PAYMENT_CALLBACK_PASSWORD') && !isse
   $pass = false;
 }
 
-if($pass){
+$status = isset($_POST['transStatus']) ? $_POST['transStatus'] : false;
+$order_id = isset($_POST['cartId']) ? $_POST['cartId'] : false;
 
-  $status = $_POST['transStatus'];
-  $order_id = $_POST['cartId'];
-  
-    if($status == 'Y'){ // Transaction successfull
+if ( $pass && $order_id && $status ) {
 
-      lC_Order::process($order_id, ADDONS_PAYMENT_WORLDPAY_HOSTED_PAYMENT_ORDER_STATUS_COMPLETE_ID);
-      $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'success', 'SSL', true, true, true);
-    }elseif($status == 'C'){ // Order canceled
-      
-      $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'cart', 'SSL', true, true, true);
-    }else{ // Something else went wrong, send back to payment page
+  if ( $status == 'Y' ) { // Transaction successfull
 
-      $error_message = '&payment_error=' . $lC_Language->get('text_label_error') . ' ' . $_POST['rawAuthMessage'];
-      $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'payment'.$error_message, 'SSL', true, true, true);
-    }
-}else{
+    lC_Order::process($order_id, ADDONS_PAYMENT_WORLDPAY_HOSTED_PAYMENT_ORDER_STATUS_COMPLETE_ID);
 
-  $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'cart', '', true, true, true); // Default redirect
+    $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'process', 'AUTO');
+  } elseif ( $status == 'C' ) { // Order canceled
+    
+    $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'cart', 'SSL', true, true, true);
+  } else { // Something else went wrong, send back to payment page
+
+    $error_message = '&payment_error=' . $lC_Language->get('text_label_error') . ' ' . $_POST['rawAuthMessage'];
+    $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'payment'.$error_message, 'SSL', true, true, true);
+  }
+
+  // insert into transaction history
+  $response_array = array('root' => $_POST);
+  $response_array['root']['transaction_response'] = trim($status);
+  $lC_XML = new lC_XML($response_array);
+
+  $Qtransaction = $lC_Database->query('insert into :table_orders_transactions_history (orders_id, transaction_code, transaction_return_value, transaction_return_status, date_added) values (:orders_id, :transaction_code, :transaction_return_value, :transaction_return_status, now())');
+  $Qtransaction->bindTable(':table_orders_transactions_history', TABLE_ORDERS_TRANSACTIONS_HISTORY);
+  $Qtransaction->bindInt(':orders_id', $order_id);
+  $Qtransaction->bindInt(':transaction_code', 1);
+  $Qtransaction->bindValue(':transaction_return_value', $lC_XML->toXML());
+  $Qtransaction->bindInt(':transaction_return_status', (strtoupper(trim($status)) == 'Y') ? 1 : 0);
+  $Qtransaction->execute();
+} else {
+
+  $redirect_url = lc_href_link(FILENAME_CHECKOUT, 'cart', 'SSL', true, true, true); // Default redirect
 }
 
 meta_redirect($redirect_url);
