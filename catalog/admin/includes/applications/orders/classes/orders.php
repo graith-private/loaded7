@@ -878,7 +878,7 @@ class lC_Orders_Admin {
   public static function getOrderTransactions($id = null) {
     global $lC_Language;
     $data = lC_Orders_Admin::getInfo($id);
-    $cnt = 1;
+    $tData = '';
     
     if ($data['transactionHistoryData'] != null) {
       foreach ($data['transactionHistoryData'] as $thData) {
@@ -890,9 +890,9 @@ class lC_Orders_Admin {
                   '<tr style="display:none;">' . 
                   '  <td colspan="3" class="force-text-break">' . $thData['return_value'] . '</td>' . 
                   '</tr>';
-        $cnt++;
       }
     }
+    return $tData;
   }
   
   public static function getOrderStatusArray() {
